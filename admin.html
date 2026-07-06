@@ -5,139 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tech Board Admin</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
-body {
-    margin: 0;
-    font-family: Inter, sans-serif;
-    background: radial-gradient(circle at 20% 10%, #1a2a4a, #05070d 60%, #000);
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.box {
-    width: 340px;
-    padding: 20px;
-    border-radius: 14px;
-    background: rgba(18,24,38,0.8);
-    border: 1px solid #00e5ff;
-}
-
-h2 {
-    text-align: center;
-    color: #00e5ff;
-}
-
-input {
-    width: 100%;
-    margin: 6px 0;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #00e5ff;
-    background: transparent;
-    color: white;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg,#00e5ff,#1a73e8);
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.hidden { display: none; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="box" id="loginBox">
-    <h2>Admin Login</h2>
+<div class="login" id="loginBox">
 
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Passwort">
+    <h1>🔒 Admin Login</h1>
 
-    <button onclick="login()">Login</button>
+    <input
+        type="email"
+        id="email"
+        placeholder="E-Mail">
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Passwort">
+
+    <button id="loginBtn">
+        Login
+    </button>
+
 </div>
 
-<div class="box hidden" id="panel">
-    <h2>Produkt hinzufügen</h2>
 
-    <input id="name" placeholder="Name">
-    <input id="desc" placeholder="Beschreibung">
-    <input id="cat" placeholder="Kategorie">
+<div id="adminPanel" style="display:none;">
 
-    <button onclick="addProduct()">Hinzufügen</button>
-    <button onclick="logout()">Logout</button>
+    <h1>Tech Board Admin</h1>
+
+    <p>Login erfolgreich ✅</p>
+
 </div>
 
-<script type="module">
-
-/* 🔥 FIREBASE IMPORTS (RICHTIG) */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-/* 🔥 DEINE FIREBASE CONFIG (MUSS EXAKT SEIN) */
-const firebaseConfig = {
-  apiKey: "AIzaSyBWzfkGLulCyTfWnr0elYXgDzn2SSYzHcc",
-  authDomain: "tech-board-8bdd5.firebaseapp.com",
-  projectId: "tech-board-8bdd5",
-  storageBucket: "tech-board-8bdd5.firebasestorage.app",
-  messagingSenderId: "668103046596",
-  appId: "1:668103046596:web:51c6e0348d7f1fba1ba091"
-};
-
-/* INIT */
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-/* LOGIN */
-window.login = function () {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-
-    signInWithEmailAndPassword(auth, email, pass)
-        .catch(err => alert(err.message));
-};
-
-/* LOGOUT */
-window.logout = function () {
-    signOut(auth);
-};
-
-/* ADD PRODUCT */
-window.addProduct = async function () {
-    await addDoc(collection(db, "products"), {
-        name: document.getElementById("name").value,
-        desc: document.getElementById("desc").value,
-        category: document.getElementById("cat").value
-    });
-
-    alert("Produkt hinzugefügt!");
-};
-
-/* UI SWITCH */
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("panel").classList.remove("hidden");
-    } else {
-        document.getElementById("loginBox").classList.remove("hidden");
-        document.getElementById("panel").classList.add("hidden");
-    }
-});
-
-</script>
+<script type="module" src="admin.js"></script>
 
 </body>
 </html>
