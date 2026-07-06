@@ -36,7 +36,8 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("adminPanel").style.display = "block";
-        loadProducts();
+
+        loadProducts(); // WICHTIG
     } else {
         document.getElementById("loginBox").style.display = "block";
         document.getElementById("adminPanel").style.display = "none";
@@ -59,9 +60,10 @@ document.getElementById("addBtn").addEventListener("click", async () => {
     });
 
     alert("Produkt hinzugefügt ✅");
+
 });
 
-/* ---------------- LOAD + DELETE ---------------- */
+/* ---------------- LOAD PRODUCTS ---------------- */
 
 const productList = document.getElementById("productList");
 
@@ -84,7 +86,7 @@ function loadProducts() {
                     border-radius:8px;
                 ">
                     <b>${p.name}</b><br>
-                    ${p.board} / ${p.category}<br>
+                    <small>${p.board} / ${p.category}</small><br>
 
                     <button onclick="deleteProduct('${id}')">
                         🗑 Löschen
