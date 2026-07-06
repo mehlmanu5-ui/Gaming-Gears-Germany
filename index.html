@@ -3,223 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Board v5</title>
+<title>Tech Board</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
-* { box-sizing: border-box; }
-
-html, body {
-    width: 100%;
-    height: auto;
-    overflow-x: hidden;
-    margin: 0;
-}
-
-body {
-    font-family: Inter, sans-serif;
-    background: radial-gradient(circle at 20% 10%, #1a2a4a, #05070d 60%, #000);
-    color: white;
-}
-
-header {
-    padding: 18px;
-    text-align: center;
-    font-weight: 800;
-    color: #00e5ff;
-    letter-spacing: 2px;
-}
-
-.search {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
-
-.search input {
-    width: 60%;
-    max-width: 500px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #00e5ff;
-    background: rgba(0,0,0,0.3);
-    color: white;
-}
-
-.layout {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    gap: 14px;
-    padding: 14px;
-}
-
-.grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-    padding-bottom: 400px;
-}
-
-.card {
-    background: rgba(18,24,38,0.65);
-    border: 1px solid rgba(0,229,255,0.25);
-    border-radius: 14px;
-    padding: 12px;
-    transition: 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: #00e5ff;
-}
-
-.card h3 {
-    font-size: 13px;
-    margin: 0 0 6px;
-}
-
-.tag {
-    font-size: 11px;
-    color: #9fb3c8;
-}
-
-.btn {
-    width: 100%;
-    margin-top: 6px;
-    padding: 7px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    background: linear-gradient(90deg,#00e5ff,#1a73e8);
-    color: black;
-}
-
-.btn.secondary {
-    background: transparent;
-    color: white;
-    border: 1px solid #00e5ff;
-}
-
-.sidebar {
-    width: 100%;
-    margin-top: 20px;
-    background: rgba(10,14,25,0.7);
-    border: 1px solid rgba(0,229,255,0.25);
-    border-radius: 14px;
-    padding: 12px;
-}
-
-.board {
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header>@TECHBOARD v5 // PLATFORM</header>
+<header>🔥 TECH BOARD</header>
 
-<div class="search">
-    <input id="search" placeholder="Search products..." oninput="filterProducts()">
+<div class="filters">
+
+    <input id="search" placeholder="Suche..." />
+
+    <select id="boardFilter">
+        <option value="all">Alle Boards</option>
+        <option value="Gaming">Gaming</option>
+        <option value="Audio">Audio</option>
+        <option value="Setup">Setup</option>
+    </select>
+
+    <select id="categoryFilter">
+        <option value="all">Alle Kategorien</option>
+    </select>
+
 </div>
 
-<div class="layout">
-    <div class="grid" id="grid"></div>
+<div id="grid"></div>
 
-    <div class="sidebar">
-        <h3>📌 Boards</h3>
-        <div id="boards"></div>
-    </div>
-</div>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
-/* 🔥 FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "AIzaSyBWzfkGLulCyTfWnr0elYXgDzn2SSYzHcc",
-  authDomain: "tech-board-8bdd5.firebaseapp.com",
-  projectId: "tech-board-8bdd5",
-  storageBucket: "tech-board-8bdd5.firebasestorage.app",
-  messagingSenderId: "668103046596",
-  appId: "1:668103046596:web:51c6e0348d7f1fba1ba091"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-/* DATA */
-let products = [];
-
-/* BOARDS (bleibt lokal erstmal) */
-let boards = JSON.parse(localStorage.getItem("boards")) || {
-    Gaming: [],
-    Audio: [],
-    Setup: []
-};
-
-/* 🔥 LIVE FIREBASE */
-onSnapshot(collection(db, "products"), (snapshot) => {
-    products = [];
-
-    snapshot.forEach(doc => {
-        products.push(doc.data());
-    });
-
-    render(products);
-});
-
-/* RENDER */
-function render(list) {
-    const grid = document.getElementById("grid");
-    grid.innerHTML = "";
-
-    list.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "card";
-
-        div.innerHTML = `
-            <h3>${p.name}</h3>
-            <div class="tag">${p.category || ""}</div>
-            <button class="btn" onclick="alert('Open: ${p.name}')">Open</button>
-        `;
-
-        grid.appendChild(div);
-    });
-}
-
-/* SEARCH */
-window.filterProducts = function () {
-    const val = document.getElementById("search").value.toLowerCase();
-    render(products.filter(p => p.name.toLowerCase().includes(val)));
-};
-
-/* BOARDS */
-function renderBoards() {
-    const box = document.getElementById("boards");
-    box.innerHTML = "";
-
-    for (let b in boards) {
-        const div = document.createElement("div");
-        div.className = "board";
-        div.innerHTML = `📂 ${b} (${boards[b].length})`;
-        box.appendChild(div);
-    }
-}
-
-renderBoards();
-
-</script>
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
