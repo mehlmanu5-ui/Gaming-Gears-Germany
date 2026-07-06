@@ -1,18 +1,20 @@
 import { db, auth } from "./firebase.js";
 
 import {
-    collection,
-    addDoc,
-    onSnapshot,
-    deleteDoc,
-    doc
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 import {
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+console.log("ADMIN JS LOADED");
 
 /* ---------------- LOGIN ---------------- */
 
@@ -24,20 +26,19 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     try {
         await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-        alert(err.message);
+        alert("Login Fehler: " + err.message);
     }
 
 });
 
-/* ---------------- AUTH ---------------- */
+/* ---------------- AUTH STATE ---------------- */
 
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("adminPanel").style.display = "block";
-
-        loadProducts(); // WICHTIG
+        loadProducts();
     } else {
         document.getElementById("loginBox").style.display = "block";
         document.getElementById("adminPanel").style.display = "none";
@@ -59,8 +60,7 @@ document.getElementById("addBtn").addEventListener("click", async () => {
         createdAt: Date.now()
     });
 
-    alert("Produkt hinzugefügt ✅");
-
+    alert("Produkt gespeichert ✅");
 });
 
 /* ---------------- LOAD PRODUCTS ---------------- */
@@ -79,18 +79,11 @@ function loadProducts() {
             const id = docSnap.id;
 
             productList.innerHTML += `
-                <div style="
-                    border:1px solid #00e5ff;
-                    padding:10px;
-                    margin:10px 0;
-                    border-radius:8px;
-                ">
+                <div style="border:1px solid #00e5ff;padding:10px;margin:10px 0;">
                     <b>${p.name}</b><br>
-                    <small>${p.board} / ${p.category}</small><br>
+                    ${p.board} / ${p.category}<br>
 
-                    <button onclick="deleteProduct('${id}')">
-                        🗑 Löschen
-                    </button>
+                    <button onclick="deleteProduct('${id}')">🗑 Löschen</button>
                 </div>
             `;
         });

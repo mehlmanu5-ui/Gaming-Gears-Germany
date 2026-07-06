@@ -3,33 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
+<title>Admin</title>
 
 <style>
-body {
-    font-family: Arial;
-    background: #0b0f1a;
-    color: white;
-    padding: 20px;
-}
-
-input, select {
-    display: block;
-    width: 300px;
-    margin: 8px 0;
-    padding: 8px;
-}
-
-button {
-    padding: 8px;
-    margin: 5px 0;
-    cursor: pointer;
-}
+body { font-family: Arial; background:#0b0f1a; color:white; padding:20px; }
+input, button { display:block; margin:8px 0; padding:8px; width:250px; }
+button { cursor:pointer; }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="loginBox">
     <h2>Login</h2>
     <input id="email" placeholder="Email">
@@ -37,20 +22,21 @@ button {
     <button id="loginBtn">Login</button>
 </div>
 
+<!-- ADMIN -->
 <div id="adminPanel" style="display:none;">
 
-    <h2>📦 Admin Dashboard</h2>
+    <h2>Admin Panel</h2>
 
     <button id="logoutBtn">Logout</button>
 
     <hr>
 
-    <h3>➕ Produkt hinzufügen</h3>
+    <h3>Produkt hinzufügen</h3>
 
     <input id="name" placeholder="Name">
     <input id="desc" placeholder="Beschreibung">
     <input id="image" placeholder="Bild URL">
-    <input id="link" placeholder="Produkt Link">
+    <input id="link" placeholder="Link">
 
     <select id="board">
         <option>Gaming</option>
@@ -64,7 +50,7 @@ button {
 
     <hr>
 
-    <h3>📦 Produkte</h3>
+    <h3>Produkte</h3>
     <div id="productList"></div>
 
 </div>
