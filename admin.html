@@ -20,10 +20,10 @@ body {
 }
 
 .box {
-    width: 320px;
+    width: 340px;
     padding: 20px;
     border-radius: 14px;
-    background: rgba(18,24,38,0.7);
+    background: rgba(18,24,38,0.8);
     border: 1px solid #00e5ff;
 }
 
@@ -61,8 +61,10 @@ button {
 
 <div class="box" id="loginBox">
     <h2>Admin Login</h2>
+
     <input id="email" placeholder="Email">
     <input id="password" type="password" placeholder="Passwort">
+
     <button onclick="login()">Login</button>
 </div>
 
@@ -79,17 +81,22 @@ button {
 
 <script type="module">
 
+/* 🔥 FIREBASE IMPORTS (RICHTIG) */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
 import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
-/* 🔥 FIREBASE */
+/* 🔥 DEINE FIREBASE CONFIG (MUSS EXAKT SEIN) */
 const firebaseConfig = {
-    apiKey: "DEIN_KEY",
-    authDomain: "DEIN_AUTH",
-    projectId: "DEIN_PROJECT_ID"
+    apiKey: "DEIN_API_KEY",
+    authDomain: "tech-board-8bdd5.firebaseapp.com",
+    projectId: "tech-board-8bdd5",
+    storageBucket: "tech-board-8bdd5.appspot.com",
+    messagingSenderId: "668103046596",
+    appId: "1:668103046596:web:51c6e0348d7f1fba1ba091"
 };
 
+/* INIT */
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
@@ -108,7 +115,7 @@ window.logout = function () {
     signOut(auth);
 };
 
-/* PRODUKT HINZUFÜGEN */
+/* ADD PRODUCT */
 window.addProduct = async function () {
     await addDoc(collection(db, "products"), {
         name: document.getElementById("name").value,
