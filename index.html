@@ -2,318 +2,49 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Board v5</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-
-* { box-sizing: border-box; }
-
-/* EXTRA FIX (Google Sites / Full Width) */
-html, body {
-    width: 100%;
-    height: auto;
-    overflow-x: hidden;
-    margin: 0;
-}
-
-body {
-    font-family: Inter, sans-serif;
-    background: radial-gradient(circle at 20% 10%, #1a2a4a, #05070d 60%, #000);
-    color: white;
-}
-
-/* HEADER */
-header {
-    padding: 18px;
-    text-align: center;
-    font-weight: 800;
-    color: #00e5ff;
-    letter-spacing: 2px;
-}
-
-/* SEARCH */
-.search {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-}
-
-.search input {
-    width: 60%;
-    max-width: 500px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #00e5ff;
-    background: rgba(0,0,0,0.3);
-    color: white;
-}
-
-/* LAYOUT (FIXED: FULL WIDTH + NO RIGHT GAP) */
-.layout {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    gap: 14px;
-    padding: 14px;
-}
-
-/* GRID (FULL WIDTH FIXED) */
-.grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-
-    /* optional “App Feel” */
-    padding-bottom: 400px;
-}
-
-/* CARD */
-.card {
-    background: rgba(18,24,38,0.65);
-    border: 1px solid rgba(0,229,255,0.25);
-    border-radius: 14px;
-    padding: 12px;
-    transition: 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    border-color: #00e5ff;
-}
-
-.card h3 {
-    font-size: 13px;
-    margin: 0 0 6px;
-}
-
-.tag {
-    font-size: 11px;
-    color: #9fb3c8;
-}
-
-/* BUTTONS */
-.btn {
-    width: 100%;
-    margin-top: 6px;
-    padding: 7px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 700;
-    background: linear-gradient(90deg,#00e5ff,#1a73e8);
-    color: black;
-}
-
-.btn.secondary {
-    background: transparent;
-    color: white;
-    border: 1px solid #00e5ff;
-}
-
-/* SIDEBAR (NOW BELOW) */
-.sidebar {
-    width: 100%;
-    margin-top: 20px;
-
-    background: rgba(10,14,25,0.7);
-    border: 1px solid rgba(0,229,255,0.25);
-    border-radius: 14px;
-    padding: 12px;
-}
-
-/* BOARD */
-.board {
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-/* MODAL */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(8px);
-}
-
-.modal-box {
-    width: 90%;
-    max-width: 520px;
-    margin: 8% auto;
-    background: rgba(10,14,25,0.95);
-    padding: 18px;
-    border-radius: 14px;
-    border: 1px solid #00e5ff;
-}
-
-.close {
-    float: right;
-    cursor: pointer;
-}
-
-/* BOARD BUTTONS */
-.boards {
-    margin-top: 10px;
-}
-
-.boards button {
-    margin: 3px;
-    font-size: 11px;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #00e5ff;
-    background: transparent;
-    color: white;
-    cursor: pointer;
-}
-</style>
+<title>Customer View</title>
 </head>
-
 <body>
 
-<header>@TECHBOARD v5 // PLATFORM</header>
+<h1>Products (LIVE)</h1>
+<div id="grid"></div>
 
-<div class="search">
-    <input id="search" placeholder="Search products..." oninput="filterProducts()">
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-<div class="layout">
-
-    <div class="grid" id="grid"></div>
-
-    <div class="sidebar">
-        <h3>📌 Boards</h3>
-        <div id="boards"></div>
-    </div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-    <div class="modal-box">
-        <span class="close" onclick="closeModal()">✖</span>
-
-        <h2 id="title"></h2>
-        <p id="desc"></p>
-
-        <button class="btn" onclick="saveItem(currentItem)">❤️ Merken</button>
-
-        <div class="boards">
-            <div>➕ Add to Board:</div>
-            <button onclick="addBoard('Gaming')">Gaming</button>
-            <button onclick="addBoard('Audio')">Audio</button>
-            <button onclick="addBoard('Setup')">Setup</button>
-        </div>
-
-        <div style="margin-top:10px; font-size:12px; color:#9fb3c8">
-            🔁 Empfehlungen:
-            <div id="recs"></div>
-        </div>
-
-    </div>
-</div>
-
-<script>
-const products = [
-{name:"Logitech G Pro X Superlight", category:"mouse", desc:"Esports Gaming Mouse"},
-{name:"Razer Huntsman Mini", category:"keyboard", desc:"60% Keyboard"},
-{name:"Sony WH-1000XM5", category:"audio", desc:"Noise Cancelling"},
-{name:"AirPods Pro 2", category:"audio", desc:"Apple In-Ears"},
-{name:"Keychron K6", category:"keyboard", desc:"Wireless Keyboard"},
-{name:"SteelSeries Rival 3", category:"mouse", desc:"Budget Mouse"}
-];
-
-let currentItem = "";
-let saved = JSON.parse(localStorage.getItem("saved")) || [];
-let boards = JSON.parse(localStorage.getItem("boards")) || {
-    Gaming: [],
-    Audio: [],
-    Setup: []
+const firebaseConfig = {
+    apiKey: "DEIN_KEY",
+    authDomain: "DEIN_AUTH",
+    projectId: "DEIN_PROJECT_ID"
 };
 
-function render(productsList) {
-    const grid = document.getElementById("grid");
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const grid = document.getElementById("grid");
+
+/* 🔥 LIVE UPDATE */
+onSnapshot(collection(db, "products"), (snapshot) => {
     grid.innerHTML = "";
 
-    productsList.forEach(p => {
+    snapshot.forEach(doc => {
+        const p = doc.data();
+
         const div = document.createElement("div");
-        div.className = "card";
+        div.style.border = "1px solid #ccc";
+        div.style.margin = "10px";
+        div.style.padding = "10px";
 
         div.innerHTML = `
             <h3>${p.name}</h3>
-            <div class="tag">${p.category}</div>
-            <button class="btn" onclick="openModal('${p.name}')">Open</button>
-            <button class="btn secondary" onclick="saveItem('${p.name}')">Save</button>
+            <p>${p.desc}</p>
+            <small>${p.category || ""}</small>
         `;
 
         grid.appendChild(div);
     });
-}
-
-function filterProducts() {
-    const val = document.getElementById("search").value.toLowerCase();
-    render(products.filter(p => p.name.toLowerCase().includes(val)));
-}
-
-function saveItem(name) {
-    if (!saved.includes(name)) {
-        saved.push(name);
-        localStorage.setItem("saved", JSON.stringify(saved));
-        renderBoards();
-    }
-}
-
-function addBoard(board) {
-    if (!boards[board].includes(currentItem)) {
-        boards[board].push(currentItem);
-        localStorage.setItem("boards", JSON.stringify(boards));
-        renderBoards();
-    }
-}
-
-function renderBoards() {
-    const box = document.getElementById("boards");
-    box.innerHTML = "";
-
-    for (let b in boards) {
-        const div = document.createElement("div");
-        div.className = "board";
-        div.innerHTML = `📂 ${b} (${boards[b].length})`;
-        box.appendChild(div);
-    }
-}
-
-function openModal(name) {
-    currentItem = name;
-    const item = products.find(p => p.name === name);
-
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("title").innerText = item.name;
-    document.getElementById("desc").innerText = item.desc;
-
-    const recs = products
-        .filter(p => p.category === item.category && p.name !== name)
-        .map(p => "➡ " + p.name);
-
-    document.getElementById("recs").innerHTML = recs.join("<br>");
-}
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-}
-
-render(products);
-renderBoards();
-
-window.onclick = e => {
-    if (e.target.id === "modal") closeModal();
-};
+});
 </script>
 
 </body>
