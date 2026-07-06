@@ -1,114 +1,47 @@
-import { db, auth } from "./firebase.js";
-
+import { db } from "./firebase.js";
 import {
-  collection,
-  addDoc,
-  onSnapshot,
-  deleteDoc,
-  doc
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+const grid = document.getElementById("grid");
 
-console.log("ADMIN JS LOADED");
-
-/* ---------------- LOGIN ---------------- */
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    console.log("TRY LOGIN:", email);
-
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-        console.log("LOGIN OK:", userCredential.user);
-        alert("LOGIN OK");
-
-    } catch (err) {
-
-        console.log("ERROR CODE:", err.code);
-        console.log("ERROR MESSAGE:", err.message);
-
-        alert("ERROR: " + err.code);
-    }
-
-});
-
-
-/* ---------------- AUTH STATE ---------------- */
-
-onAuthStateChanged(auth, (user) => {
-
-    if (user) {
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        loadProducts();
-    } else {
-        document.getElementById("loginBox").style.display = "block";
-        document.getElementById("adminPanel").style.display = "none";
-    }
-
-});
-
-/* ---------------- ADD PRODUCT ---------------- */
-
-document.getElementById("addBtn").addEventListener("click", async () => {
+window.addProduct = async () => {
 
     await addDoc(collection(db, "products"), {
-        name: document.getElementById("name").value,
-        desc: document.getElementById("desc").value,
-        image: document.getElementById("image").value,
-        link: document.getElementById("link").value,
-        board: document.getElementById("board").value,
-        category: document.getElementById("category").value,
-        createdAt: Date.now()
+        name: name.value,
+        desc: desc.value,
+        image: image.value,
+        link: link.value,
+        board: board.value,
+        category: category.value
     });
 
-    alert("Produkt gespeichert ✅");
+};
+
+onSnapshot(collection(db, "products"), snap => {
+
+    grid.innerHTML = "";
+
+    snap.forEach(d => {
+
+        const p = d.data();
+
+        grid.innerHTML += `
+            <div class="card">
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <small>${p.board} / ${p.category}</small>
+
+                <button onclick="del('${d.id}')">DELETE</button>
+            </div>
+        `;
+    });
 });
 
-/* ---------------- LOAD PRODUCTS ---------------- */
-
-const productList = document.getElementById("productList");
-
-function loadProducts() {
-
-    onSnapshot(collection(db, "products"), (snapshot) => {
-
-        productList.innerHTML = "";
-
-        snapshot.forEach((docSnap) => {
-
-            const p = docSnap.data();
-            const id = docSnap.id;
-
-            productList.innerHTML += `
-                <div style="border:1px solid #00e5ff;padding:10px;margin:10px 0;">
-                    <b>${p.name}</b><br>
-                    ${p.board} / ${p.category}<br>
-
-                    <button onclick="deleteProduct('${id}')">🗑 Löschen</button>
-                </div>
-            `;
-        });
-    });
-}
-
-/* ---------------- DELETE ---------------- */
-
-window.deleteProduct = async function(id) {
+window.del = async (id) => {
     await deleteDoc(doc(db, "products", id));
-}
-
-/* ---------------- LOGOUT ---------------- */
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-    signOut(auth);
-});
+};

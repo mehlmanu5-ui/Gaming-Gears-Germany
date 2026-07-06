@@ -1,80 +1,38 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TECH NODE // DATABASE</title>
+<title>TECH NODE</title>
 
 <link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
 
-<div id="matrix"></div>
-
-<header>
-
-<div class="logo">
-> TECH NODE
-</div>
-
-<div class="subtitle">
-DATABASE ACCESS // LIVE
-</div>
-
-</header>
+<header>TECH NODE // LIVE SYSTEM</header>
 
 <div class="filters">
 
-<input id="search" placeholder="Search Hardware...">
+<input id="search" placeholder="Search...">
 
 <select id="boardFilter">
-<option value="all">ALL BOARDS</option>
-<option value="Gaming">GAMING</option>
-<option value="Audio">AUDIO</option>
-<option value="Setup">SETUP</option>
+<option value="all">All Boards</option>
+<option value="Gaming">Gaming</option>
+<option value="Audio">Audio</option>
+<option value="Setup">Setup</option>
 </select>
 
 <select id="categoryFilter">
-<option value="all">ALL CATEGORIES</option>
+<option value="all">All Categories</option>
 </select>
 
 </div>
 
-<main>
-
 <div id="grid"></div>
 
-</main>
-
 <script type="module" src="app.js"></script>
-
-<script>
-
-const matrix=document.getElementById("matrix");
-
-for(let i=0;i<80;i++){
-
-const s=document.createElement("span");
-
-s.innerHTML=Math.random()>0.5?"1":"0";
-
-s.style.left=Math.random()*100+"vw";
-
-s.style.animationDuration=(2+Math.random()*6)+"s";
-
-s.style.animationDelay=Math.random()*5+"s";
-
-matrix.appendChild(s);
-
-}
-
-</script>
 
 </body>
 </html>

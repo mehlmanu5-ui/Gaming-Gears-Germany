@@ -1,78 +1,63 @@
 import { db } from "./firebase.js";
-import {
-    collection,
-    onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-let allProducts = [];
+let all = [];
 
 const grid = document.getElementById("grid");
-
 const search = document.getElementById("search");
 const boardFilter = document.getElementById("boardFilter");
 const categoryFilter = document.getElementById("categoryFilter");
 
-/* ---------------- LIVE DATA ---------------- */
+onSnapshot(collection(db, "products"), snap => {
 
-onSnapshot(collection(db, "products"), (snapshot) => {
+    all = [];
 
-    allProducts = [];
-
-    snapshot.forEach(doc => {
-        allProducts.push({ id: doc.id, ...doc.data() });
+    snap.forEach(doc => {
+        all.push({ id: doc.id, ...doc.data() });
     });
 
-    render(allProducts);
-    updateCategories(allProducts);
+    render(all);
+    updateCategories(all);
 });
-
-/* ---------------- RENDER ---------------- */
 
 function render(list) {
 
-    const searchValue = search.value?.toLowerCase() || "";
-    const boardValue = boardFilter.value;
-    const categoryValue = categoryFilter.value;
-
     grid.innerHTML = "";
 
+    const s = search.value?.toLowerCase() || "";
+    const b = boardFilter.value;
+    const c = categoryFilter.value;
+
     list
-        .filter(p => p.name.toLowerCase().includes(searchValue))
-        .filter(p => boardValue === "all" ? true : p.board === boardValue)
-        .filter(p => categoryValue === "all" ? true : p.category === categoryValue)
-        .forEach(p => {
+    .filter(p => p.name.toLowerCase().includes(s))
+    .filter(p => b === "all" ? true : p.board === b)
+    .filter(p => c === "all" ? true : p.category === c)
+    .forEach(p => {
 
-            grid.innerHTML += `
-                <div class="card">
-                    <img src="${p.image || ''}">
-                    <h3>${p.name}</h3>
-                    <p>${p.desc}</p>
+        grid.innerHTML += `
+            <div class="card">
+                <img src="${p.image || 'https://via.placeholder.com/300'}">
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <small>${p.board} / ${p.category}</small>
 
-                    <small>${p.board} / ${p.category}</small>
-
-                    <a class="btn" href="${p.link}" target="_blank">
-                        Öffnen
-                    </a>
-                </div>
-            `;
-        });
+                <a class="btn" href="${p.link}" target="_blank">OPEN</a>
+            </div>
+        `;
+    });
 }
 
-/* ---------------- FILTER EVENTS ---------------- */
+search.addEventListener("input", () => render(all));
+boardFilter.addEventListener("change", () => render(all));
+categoryFilter.addEventListener("change", () => render(all));
 
-search.addEventListener("input", () => render(allProducts));
-boardFilter.addEventListener("change", () => render(allProducts));
-categoryFilter.addEventListener("change", () => render(allProducts));
+function updateCategories(list) {
 
-/* ---------------- DYNAMIC CATEGORY DROPDOWN ---------------- */
+    const cats = [...new Set(list.map(p => p.category))];
 
-function updateCategories(products) {
+    categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
 
-    const categories = [...new Set(products.map(p => p.category))];
-
-    categoryFilter.innerHTML = `<option value="all">Alle Kategorien</option>`;
-
-    categories.forEach(c => {
+    cats.forEach(c => {
         categoryFilter.innerHTML += `<option value="${c}">${c}</option>`;
     });
 }

@@ -2,58 +2,39 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin</title>
+<title>ADMIN NODE</title>
 
-<style>
-body { font-family: Arial; background:#0b0f1a; color:white; padding:20px; }
-input, button { display:block; margin:8px 0; padding:8px; width:250px; }
-button { cursor:pointer; }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginBox">
-    <h2>Login</h2>
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Passwort">
-    <button id="loginBtn">Login</button>
-</div>
+<header>ADMIN CONTROL // FIREBASE</header>
 
-<!-- ADMIN -->
-<div id="adminPanel" style="display:none;">
+<div class="filters">
 
-    <h2>Admin Panel</h2>
+<input id="name" placeholder="Name">
+<input id="desc" placeholder="Desc">
+<input id="image" placeholder="Image URL">
+<input id="link" placeholder="Link">
 
-    <button id="logoutBtn">Logout</button>
+<select id="board">
+<option>Gaming</option>
+<option>Audio</option>
+<option>Setup</option>
+</select>
 
-    <hr>
+<select id="category">
+<option>Mouse</option>
+<option>Keyboard</option>
+<option>Audio</option>
+</select>
 
-    <h3>Produkt hinzufügen</h3>
-
-    <input id="name" placeholder="Name">
-    <input id="desc" placeholder="Beschreibung">
-    <input id="image" placeholder="Bild URL">
-    <input id="link" placeholder="Link">
-
-    <select id="board">
-        <option>Gaming</option>
-        <option>Audio</option>
-        <option>Setup</option>
-    </select>
-
-    <input id="category" placeholder="Kategorie">
-
-    <button id="addBtn">Hinzufügen</button>
-
-    <hr>
-
-    <h3>Produkte</h3>
-    <div id="productList"></div>
+<button onclick="addProduct()">ADD</button>
 
 </div>
+
+<div id="grid"></div>
 
 <script type="module" src="admin.js"></script>
 
