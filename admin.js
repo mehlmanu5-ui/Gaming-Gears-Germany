@@ -1,5 +1,11 @@
 import { db, auth } from "./firebase.js";
 import {
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+import {
     collection,
     addDoc,
     deleteDoc,
@@ -7,17 +13,10 @@ import {
     onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-
-/* ---------------- AUTH GUARD ---------------- */
-
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        window.location.href = "login.html";
-    }
-});
-
 /* ---------------- DOM ---------------- */
+
+const loginBox = document.getElementById("loginBox");
+const adminBox = document.getElementById("adminBox");
 
 const grid = document.getElementById("grid");
 
@@ -28,11 +27,43 @@ const link = document.getElementById("link");
 const board = document.getElementById("board");
 const category = document.getElementById("category");
 
-/* ---------------- ADD ---------------- */
+/* ---------------- LOGIN ---------------- */
+
+window.login = async () => {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+        alert("Login failed: " + e.message);
+    }
+};
+
+/* ---------------- LOGOUT ---------------- */
+
+window.logout = async () => {
+    await signOut(auth);
+};
+
+/* ---------------- AUTH STATE ---------------- */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+        loginBox.style.display = "none";
+        adminBox.style.display = "block";
+        loadProducts();
+    } else {
+        loginBox.style.display = "block";
+        adminBox.style.display = "none";
+    }
+});
+
+/* ---------------- ADD PRODUCT ---------------- */
 
 window.addProduct = async () => {
-
-    if(!name.value) return alert("Name fehlt!");
 
     await addDoc(collection(db, "products"), {
         name: name.value,
@@ -43,33 +74,32 @@ window.addProduct = async () => {
         category: category.value
     });
 
-    name.value = "";
-    desc.value = "";
-    image.value = "";
-    link.value = "";
 };
 
-/* ---------------- LIVE LOAD ---------------- */
+/* ---------------- LOAD PRODUCTS ---------------- */
 
-onSnapshot(collection(db, "products"), snap => {
+function loadProducts() {
 
-    grid.innerHTML = "";
+    onSnapshot(collection(db, "products"), snap => {
 
-    snap.forEach(d => {
+        grid.innerHTML = "";
 
-        const p = d.data();
+        snap.forEach(d => {
 
-        grid.innerHTML += `
-            <div class="card">
-                <h3>${p.name}</h3>
-                <p>${p.desc}</p>
-                <small>${p.board} / ${p.category}</small>
+            const p = d.data();
 
-                <button onclick="del('${d.id}')">DELETE</button>
-            </div>
-        `;
+            grid.innerHTML += `
+                <div class="card">
+                    <h3>${p.name}</h3>
+                    <p>${p.desc}</p>
+                    <small>${p.board} / ${p.category}</small>
+
+                    <button onclick="del('${d.id}')">DELETE</button>
+                </div>
+            `;
+        });
     });
-});
+}
 
 /* ---------------- DELETE ---------------- */
 

@@ -10,30 +10,43 @@
 
 <header>ADMIN CONTROL</header>
 
-<div class="filters">
-
-<input id="name" placeholder="Name">
-<input id="desc" placeholder="Desc">
-<input id="image" placeholder="Image URL">
-<input id="link" placeholder="Link">
-
-<select id="board">
-<option>Gaming</option>
-<option>Audio</option>
-<option>Setup</option>
-</select>
-
-<select id="category">
-<option>Mouse</option>
-<option>Keyboard</option>
-<option>Audio</option>
-</select>
-
-<button onclick="addProduct()">ADD</button>
-
+<!-- LOGIN -->
+<div id="loginBox" class="filters">
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">LOGIN</button>
 </div>
 
-<div id="grid"></div>
+<!-- ADMIN PANEL -->
+<div id="adminBox" style="display:none;">
+
+    <div class="filters">
+
+        <input id="name" placeholder="Name">
+        <input id="desc" placeholder="Desc">
+        <input id="image" placeholder="Image URL">
+        <input id="link" placeholder="Link">
+
+        <select id="board">
+            <option>Gaming</option>
+            <option>Audio</option>
+            <option>Setup</option>
+        </select>
+
+        <select id="category">
+            <option>Mouse</option>
+            <option>Keyboard</option>
+            <option>Audio</option>
+        </select>
+
+        <button onclick="addProduct()">ADD</button>
+        <button onclick="logout()">LOGOUT</button>
+
+    </div>
+
+    <div id="grid"></div>
+
+</div>
 
 <script type="module" src="admin.js"></script>
 

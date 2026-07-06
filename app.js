@@ -61,3 +61,4 @@ function updateCategories(list) {
         categoryFilter.innerHTML += `<option value="${c}">${c}</option>`;
     });
 }
+
