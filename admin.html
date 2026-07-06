@@ -3,68 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tech Board Admin</title>
+<title>Admin Panel</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+body {
+    font-family: Arial;
+    background: #0b0f1a;
+    color: white;
+    padding: 20px;
+}
+
+input, select {
+    display: block;
+    width: 300px;
+    margin: 8px 0;
+    padding: 8px;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
-<div class="login" id="loginBox">
-
-    <h1>🔒 Admin Login</h1>
-
-    <input
-        type="email"
-        id="email"
-        placeholder="E-Mail">
-
-    <input
-        type="password"
-        id="password"
-        placeholder="Passwort">
-
-    <button id="loginBtn">
-        Login
-    </button>
-
+<div id="loginBox">
+    <h2>Login</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Passwort">
+    <button id="loginBtn">Login</button>
 </div>
 
-
 <div id="adminPanel" style="display:none;">
-
-    <h1>Tech Board Admin</h1>
-
-    <p>Login erfolgreich ✅</p>
-
-</div>
-
-<script type="module" src="admin.js"></script>
-<div id="adminPanel" style="display:none;">
-
-    <h1>📦 Admin Dashboard</h1>
+    <h2>Admin Dashboard</h2>
 
     <button id="logoutBtn">Logout</button>
 
     <hr>
 
-    <h2>➕ Neues Produkt</h2>
+    <h3>Produkt hinzufügen</h3>
 
-    <input id="name" placeholder="Produktname">
+    <input id="name" placeholder="Name">
     <input id="desc" placeholder="Beschreibung">
     <input id="image" placeholder="Bild URL">
     <input id="link" placeholder="Produkt Link">
 
     <select id="board">
-        <option value="Gaming">Gaming</option>
-        <option value="Audio">Audio</option>
-        <option value="Setup">Setup</option>
+        <option>Gaming</option>
+        <option>Audio</option>
+        <option>Setup</option>
     </select>
 
-    <input id="category" placeholder="Kategorie (z.B. Mäuse)">
+    <input id="category" placeholder="Kategorie">
 
-    <button id="addBtn">Produkt hinzufügen</button>
-
+    <button id="addBtn">Hinzufügen</button>
 </div>
+
+<script type="module" src="admin.js"></script>
+
 </body>
 </html>
