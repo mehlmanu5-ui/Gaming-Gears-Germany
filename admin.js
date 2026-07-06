@@ -23,10 +23,20 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
+    console.log("TRY LOGIN:", email);
+
     try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        console.log("LOGIN OK:", userCredential.user);
+        alert("LOGIN OK");
+
     } catch (err) {
-        alert("Login Fehler: " + err.message);
+
+        console.log("ERROR CODE:", err.code);
+        console.log("ERROR MESSAGE:", err.message);
+
+        alert("ERROR: " + err.code);
     }
 
 });
