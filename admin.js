@@ -41,6 +41,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 });
 
+
 /* ---------------- AUTH STATE ---------------- */
 
 onAuthStateChanged(auth, (user) => {
