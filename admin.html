@@ -1,60 +1,42 @@
-import { db } from "./firebase.js";
-import {
-    collection,
-    addDoc,
-    deleteDoc,
-    doc,
-    onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>ADMIN NODE</title>
 
-const grid = document.getElementById("grid");
+<link rel="stylesheet" href="style.css">
+</head>
 
-const name = document.getElementById("name");
-const desc = document.getElementById("desc");
-const image = document.getElementById("image");
-const link = document.getElementById("link");
-const board = document.getElementById("board");
-const category = document.getElementById("category");
+<body>
 
-window.addProduct = async () => {
+<header>ADMIN CONTROL // FIREBASE</header>
 
-    if(!name.value) return alert("Name fehlt!");
+<div class="filters">
 
-    await addDoc(collection(db, "products"), {
-        name: name.value,
-        desc: desc.value,
-        image: image.value,
-        link: link.value,
-        board: board.value,
-        category: category.value
-    });
+<input id="name" placeholder="Name">
+<input id="desc" placeholder="Desc">
+<input id="image" placeholder="Image URL">
+<input id="link" placeholder="Link">
 
-    name.value = "";
-    desc.value = "";
-    image.value = "";
-    link.value = "";
-};
+<select id="board">
+<option>Gaming</option>
+<option>Audio</option>
+<option>Setup</option>
+</select>
 
-onSnapshot(collection(db, "products"), snap => {
+<select id="category">
+<option>Mouse</option>
+<option>Keyboard</option>
+<option>Audio</option>
+</select>
 
-    grid.innerHTML = "";
+<button onclick="addProduct()">ADD</button>
 
-    snap.forEach(d => {
+</div>
 
-        const p = d.data();
+<div id="grid"></div>
 
-        grid.innerHTML += `
-            <div class="card">
-                <h3>${p.name}</h3>
-                <p>${p.desc}</p>
-                <small>${p.board} / ${p.category}</small>
+<script type="module" src="admin.js"></script>
 
-                <button onclick="del('${d.id}')">DELETE</button>
-            </div>
-        `;
-    });
-});
-
-window.del = async (id) => {
-    await deleteDoc(doc(db, "products", id));
-};
+</body>
+</html>
