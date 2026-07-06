@@ -34,14 +34,18 @@
         </select>
 
         <select id="category">
-            <option>Mouse</option>
-            <option>Keyboard</option>
-            <option>Audio</option>
+            <option value="">Kategorie wählen</option>
         </select>
 
         <button onclick="addProduct()">ADD</button>
         <button onclick="logout()">LOGOUT</button>
 
+    </div>
+
+    <!-- CATEGORY CREATE -->
+    <div class="filters">
+        <input id="newCategory" placeholder="Neue Kategorie...">
+        <button onclick="addCategory()">+ Kategorie erstellen</button>
     </div>
 
     <div id="grid"></div>

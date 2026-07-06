@@ -17,7 +17,6 @@ import {
 
 const loginBox = document.getElementById("loginBox");
 const adminBox = document.getElementById("adminBox");
-
 const grid = document.getElementById("grid");
 
 const name = document.getElementById("name");
@@ -37,7 +36,7 @@ window.login = async () => {
     try {
         await signInWithEmailAndPassword(auth, email, password);
     } catch (e) {
-        alert("Login failed: " + e.message);
+        alert("Login fehlgeschlagen: " + e.message);
     }
 };
 
@@ -54,14 +53,17 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         loginBox.style.display = "none";
         adminBox.style.display = "block";
+
         loadProducts();
+        loadCategories();
+
     } else {
         loginBox.style.display = "block";
         adminBox.style.display = "none";
     }
 });
 
-/* ---------------- ADD PRODUCT ---------------- */
+/* ---------------- PRODUCTS ---------------- */
 
 window.addProduct = async () => {
 
@@ -74,9 +76,11 @@ window.addProduct = async () => {
         category: category.value
     });
 
+    name.value = "";
+    desc.value = "";
+    image.value = "";
+    link.value = "";
 };
-
-/* ---------------- LOAD PRODUCTS ---------------- */
 
 function loadProducts() {
 
@@ -101,8 +105,40 @@ function loadProducts() {
     });
 }
 
-/* ---------------- DELETE ---------------- */
-
 window.del = async (id) => {
     await deleteDoc(doc(db, "products", id));
 };
+
+/* ---------------- CATEGORIES ---------------- */
+
+window.addCategory = async () => {
+
+    const input = document.getElementById("newCategory");
+
+    if (!input.value) return;
+
+    await addDoc(collection(db, "categories"), {
+        name: input.value
+    });
+
+    input.value = "";
+};
+
+function loadCategories() {
+
+    onSnapshot(collection(db, "categories"), snap => {
+
+        category.innerHTML = `<option value="">Kategorie wählen</option>`;
+
+        snap.forEach(d => {
+
+            const c = d.data();
+
+            category.innerHTML += `
+                <option value="${c.name}">
+                    ${c.name}
+                </option>
+            `;
+        });
+    });
+}
