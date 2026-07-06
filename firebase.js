@@ -3,7 +3,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.15.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "DEIN_API_KEY",
+  apiKey: "AIzaSyBWzfkGLulCyTfWnr0elYXgDzn2SSYzHcc",
   authDomain: "tech-board-8bdd5.firebaseapp.com",
   projectId: "tech-board-8bdd5",
   storageBucket: "tech-board-8bdd5.appspot.com",
