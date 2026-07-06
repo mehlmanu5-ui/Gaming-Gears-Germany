@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 import {
     collection,
     addDoc,
@@ -7,30 +7,49 @@ import {
     onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+/* ---------------- AUTH GUARD ---------------- */
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+    }
+});
+
+/* ---------------- DOM ---------------- */
+
 const grid = document.getElementById("grid");
 
-const nameInput = document.getElementById("name");
-const descInput = document.getElementById("desc");
-const imageInput = document.getElementById("image");
-const linkInput = document.getElementById("link");
-const boardInput = document.getElementById("board");
-const categoryInput = document.getElementById("category");
+const name = document.getElementById("name");
+const desc = document.getElementById("desc");
+const image = document.getElementById("image");
+const link = document.getElementById("link");
+const board = document.getElementById("board");
+const category = document.getElementById("category");
+
+/* ---------------- ADD ---------------- */
 
 window.addProduct = async () => {
 
-    if(!nameInput.value) return alert("Name fehlt!");
+    if(!name.value) return alert("Name fehlt!");
 
     await addDoc(collection(db, "products"), {
-        name: nameInput.value,
-        desc: descInput.value,
-        image: imageInput.value,
-        link: linkInput.value,
-        board: boardInput.value,
-        category: categoryInput.value
+        name: name.value,
+        desc: desc.value,
+        image: image.value,
+        link: link.value,
+        board: board.value,
+        category: category.value
     });
 
-    alert("Produkt hinzugefügt");
+    name.value = "";
+    desc.value = "";
+    image.value = "";
+    link.value = "";
 };
+
+/* ---------------- LIVE LOAD ---------------- */
 
 onSnapshot(collection(db, "products"), snap => {
 
@@ -51,6 +70,8 @@ onSnapshot(collection(db, "products"), snap => {
         `;
     });
 });
+
+/* ---------------- DELETE ---------------- */
 
 window.del = async (id) => {
     await deleteDoc(doc(db, "products", id));
