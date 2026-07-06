@@ -1,42 +1,60 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<title>ADMIN NODE</title>
+import { db } from "./firebase.js";
+import {
+    collection,
+    addDoc,
+    deleteDoc,
+    doc,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-<link rel="stylesheet" href="style.css">
-</head>
+const grid = document.getElementById("grid");
 
-<body>
+const name = document.getElementById("name");
+const desc = document.getElementById("desc");
+const image = document.getElementById("image");
+const link = document.getElementById("link");
+const board = document.getElementById("board");
+const category = document.getElementById("category");
 
-<header>ADMIN CONTROL // FIREBASE</header>
+window.addProduct = async () => {
 
-<div class="filters">
+    if(!name.value) return alert("Name fehlt!");
 
-<input id="name" placeholder="Name">
-<input id="desc" placeholder="Desc">
-<input id="image" placeholder="Image URL">
-<input id="link" placeholder="Link">
+    await addDoc(collection(db, "products"), {
+        name: name.value,
+        desc: desc.value,
+        image: image.value,
+        link: link.value,
+        board: board.value,
+        category: category.value
+    });
 
-<select id="board">
-<option>Gaming</option>
-<option>Audio</option>
-<option>Setup</option>
-</select>
+    name.value = "";
+    desc.value = "";
+    image.value = "";
+    link.value = "";
+};
 
-<select id="category">
-<option>Mouse</option>
-<option>Keyboard</option>
-<option>Audio</option>
-</select>
+onSnapshot(collection(db, "products"), snap => {
 
-<button onclick="addProduct()">ADD</button>
+    grid.innerHTML = "";
 
-</div>
+    snap.forEach(d => {
 
-<div id="grid"></div>
+        const p = d.data();
 
-<script type="module" src="admin.js"></script>
+        grid.innerHTML += `
+            <div class="card">
+                <h3>${p.name}</h3>
+                <p>${p.desc}</p>
+                <small>${p.board} / ${p.category}</small>
 
-</body>
-</html>
+                <button onclick="del('${d.id}')">DELETE</button>
+            </div>
+        `;
+    });
+});
+
+window.del = async (id) => {
+    await deleteDoc(doc(db, "products", id));
+};

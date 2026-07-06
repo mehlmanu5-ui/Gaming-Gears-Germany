@@ -9,17 +9,27 @@ import {
 
 const grid = document.getElementById("grid");
 
+const nameInput = document.getElementById("name");
+const descInput = document.getElementById("desc");
+const imageInput = document.getElementById("image");
+const linkInput = document.getElementById("link");
+const boardInput = document.getElementById("board");
+const categoryInput = document.getElementById("category");
+
 window.addProduct = async () => {
 
+    if(!nameInput.value) return alert("Name fehlt!");
+
     await addDoc(collection(db, "products"), {
-        name: name.value,
-        desc: desc.value,
-        image: image.value,
-        link: link.value,
-        board: board.value,
-        category: category.value
+        name: nameInput.value,
+        desc: descInput.value,
+        image: imageInput.value,
+        link: linkInput.value,
+        board: boardInput.value,
+        category: categoryInput.value
     });
 
+    alert("Produkt hinzugefügt");
 };
 
 onSnapshot(collection(db, "products"), snap => {
