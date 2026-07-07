@@ -1,4 +1,3 @@
-javascript
 import { db } from "./firebase.js";
 
 import {
@@ -11,7 +10,6 @@ import {
 /* =========================
    DOM
 ========================= */
-
 
 const grid = document.getElementById("grid");
 
@@ -48,7 +46,7 @@ let allCategories = [];
 ========================= */
 
 
-onSnapshot(collection(db,"products"), snap => {
+onSnapshot(collection(db, "products"), snap => {
 
 
     allProducts = [];
@@ -69,18 +67,17 @@ onSnapshot(collection(db,"products"), snap => {
     });
 
 
+    console.log(
+        "Produkte geladen:",
+        allProducts
+    );
+
 
     updateStats();
 
-
     setFeatured();
 
-
     render(allProducts);
-
-
-
-    hideLoader();
 
 
 });
@@ -92,11 +89,16 @@ onSnapshot(collection(db,"products"), snap => {
 
 
 /* =========================
-   RENDER
+   RENDER PRODUCTS
 ========================= */
 
 
 function render(list){
+
+
+    if(!grid)
+        return;
+
 
 
     grid.innerHTML = "";
@@ -104,17 +106,18 @@ function render(list){
 
 
     const text =
-    search.value.toLowerCase();
+    (search?.value || "")
+    .toLowerCase();
 
 
 
     const board =
-    boardFilter.value;
+    boardFilter?.value || "all";
 
 
 
     const category =
-    categoryFilter.value;
+    categoryFilter?.value || "all";
 
 
 
@@ -123,8 +126,8 @@ function render(list){
 
     .filter(p =>
 
-        p.name
-        ?.toLowerCase()
+        (p.name || "")
+        .toLowerCase()
         .includes(text)
 
     )
@@ -134,9 +137,18 @@ function render(list){
 
         board === "all"
 
-        ? true
+        ?
 
-        : p.board === board
+        true
+
+        :
+
+        (p.board || "")
+        .toLowerCase()
+
+        ===
+
+        board.toLowerCase()
 
     )
 
@@ -145,9 +157,18 @@ function render(list){
 
         category === "all"
 
-        ? true
+        ?
 
-        : p.category === category
+        true
+
+        :
+
+        (p.category || "")
+        .toLowerCase()
+
+        ===
+
+        category.toLowerCase()
 
     )
 
@@ -167,29 +188,26 @@ function render(list){
             'https://via.placeholder.com/300'}">
 
 
+
             <h3>
-
-                ${p.name}
-
+                ${p.name || "Unknown Product"}
             </h3>
 
 
 
             <p>
-
                 ${p.desc || ""}
-
             </p>
 
 
 
             <small>
 
-                ${p.board || ""}
+                ${p.board || "Unknown"}
 
                 /
 
-                ${p.category || ""}
+                ${p.category || "Unknown"}
 
             </small>
 
@@ -204,9 +222,7 @@ function render(list){
 
             target="_blank">
 
-
                 OPEN
-
 
             </a>
 
@@ -218,12 +234,12 @@ function render(list){
         `;
 
 
-
     });
 
 
-
 }
+
+
 
 
 
@@ -236,24 +252,37 @@ function render(list){
 ========================= */
 
 
+if(search){
+
 search.addEventListener(
 "input",
 ()=>render(allProducts)
 );
 
+}
 
+
+
+if(boardFilter){
 
 boardFilter.addEventListener(
 "change",
 ()=>render(allProducts)
 );
 
+}
 
+
+
+if(categoryFilter){
 
 categoryFilter.addEventListener(
 "change",
 ()=>render(allProducts)
 );
+
+}
+
 
 
 
@@ -270,26 +299,35 @@ categoryFilter.addEventListener(
 function loadCategories(){
 
 
-    onSnapshot(collection(db,"categories"),snap=>{
+
+    onSnapshot(
+    collection(db,"categories"),
+    snap => {
+
 
 
         allCategories = [];
 
 
 
+        if(categoryFilter){
+
+
         categoryFilter.innerHTML = `
 
         <option value="all">
-
         📁 All Categories
-
         </option>
 
         `;
 
 
+        }
 
-        snap.forEach(doc=>{
+
+
+        snap.forEach(doc => {
+
 
 
             const data = doc.data();
@@ -300,7 +338,11 @@ function loadCategories(){
 
 
 
+            if(categoryFilter){
+
+
             categoryFilter.innerHTML += `
+
 
             <option value="${data.name}">
 
@@ -308,7 +350,12 @@ function loadCategories(){
 
             </option>
 
+
             `;
+
+
+            }
+
 
 
         });
@@ -320,7 +367,6 @@ function loadCategories(){
 
 
     });
-
 
 
 }
@@ -342,24 +388,31 @@ function updateStats(){
 
 
 
-    if(productCount)
+    if(productCount){
 
         productCount.textContent =
         allProducts.length;
 
+    }
 
 
-    if(categoryCount)
+
+
+    if(categoryCount){
 
         categoryCount.textContent =
         allCategories.length;
+
+    }
+
 
 
 
     if(boardCount){
 
 
-        const boards = new Set(
+        const boards =
+        new Set(
 
             allProducts.map(
 
@@ -367,7 +420,10 @@ function updateStats(){
 
             )
 
+            .filter(Boolean)
+
         );
+
 
 
         boardCount.textContent =
@@ -375,7 +431,6 @@ function updateStats(){
 
 
     }
-
 
 
 }
@@ -389,16 +444,17 @@ function updateStats(){
 
 
 /* =========================
-   FEATURED SYSTEM
+   FEATURED
 ========================= */
 
 
 function setFeatured(){
 
 
-    if(!featuredName)
 
-    return;
+    if(!featuredName)
+        return;
+
 
 
 
@@ -424,10 +480,7 @@ function setFeatured(){
 
 
 
-
-
         if(featuredButton){
-
 
 
             featuredButton.href =
@@ -435,8 +488,8 @@ function setFeatured(){
             featuredProduct.link || "#";
 
 
-
         }
+
 
 
 
@@ -448,7 +501,6 @@ function setFeatured(){
         featuredName.textContent =
 
         "No Featured Product";
-
 
 
     }
@@ -465,44 +517,8 @@ function setFeatured(){
 
 
 /* =========================
-   LOADER
+   START
 ========================= */
 
 
-function hideLoader(){
-
-
-    const loader =
-
-    document.getElementById("loader");
-
-
-
-    if(loader){
-
-
-        setTimeout(()=>{
-
-
-            loader.style.display = "none";
-
-
-        },800);
-
-
-
-    }
-
-
-}
-
-
-
-
-
-
-/* START */
-
-
 loadCategories();
-
