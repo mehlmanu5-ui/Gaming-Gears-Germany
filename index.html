@@ -1,38 +1,307 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GamingGearGer</title>
+<title>Gaming Gear Ger // Live Database</title>
 
 <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<header>Gaming Gear Ger // LIVE SYSTEM</header>
 
-<div class="filters">
+<!-- Loading Screen -->
 
-<input id="search" placeholder="Search...">
+<div id="loader">
 
-<select id="boardFilter">
-<option value="all">All Boards</option>
-<option value="Gaming">Gaming</option>
-<option value="Audio">Audio</option>
-<option value="Setup">Setup</option>
-</select>
+    <div class="loader-box">
 
-<select id="categoryFilter">
-<option value="all">All Categories</option>
-</select>
+        <h2>Loading Database...</h2>
+
+        <div class="loading-bar">
+            <span></span>
+        </div>
+
+        <p>Connecting to Firebase</p>
+
+    </div>
 
 </div>
 
-<div id="grid"></div>
+
+
+<!-- Animated Background -->
+
+<div class="particles"></div>
+
+
+
+<!-- HERO -->
+
+<header class="hero">
+
+
+    <div class="logo">
+
+        GAMING GEAR GER
+
+    </div>
+
+
+    <div class="badge">
+
+        ● LIVE DATABASE
+
+    </div>
+
+
+    <h1>
+
+        The Ultimate Gaming Gear Database
+
+    </h1>
+
+
+    <p>
+
+        Discover, compare and explore premium gaming hardware.
+
+    </p>
+
+
+</header>
+
+
+
+
+
+<!-- LIVE STATS -->
+
+<section class="stats">
+
+
+    <div class="stat-card">
+
+        <span>Products</span>
+
+        <strong id="productCount">
+            0
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+        <span>Boards</span>
+
+        <strong id="boardCount">
+            0
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+        <span>Categories</span>
+
+        <strong id="categoryCount">
+            0
+        </strong>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+        <span>Status</span>
+
+        <strong class="live">
+
+            LIVE
+
+        </strong>
+
+    </div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- FEATURED -->
+
+<section class="featured">
+
+
+    <div class="featured-title">
+
+        ⭐ FEATURED GEAR
+
+    </div>
+
+
+    <div class="featured-content">
+
+
+        <h2 id="featuredName">
+
+            Logitech G Pro X Superlight
+
+        </h2>
+
+
+        <a class="btn featured-btn">
+
+            VIEW PRODUCT
+
+        </a>
+
+
+    </div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<!-- FILTER -->
+
+<section class="filters">
+
+
+<div class="search-box">
+
+
+    <span>
+        🔍
+    </span>
+
+
+    <input 
+        id="search"
+        placeholder="Search Gaming Gear..."
+    >
+
+
+</div>
+
+
+
+
+
+<select id="boardFilter">
+
+<option value="all">
+🎮 All Boards
+</option>
+
+<option value="Gaming">
+Gaming
+</option>
+
+<option value="Audio">
+Audio
+</option>
+
+<option value="Setup">
+Setup
+</option>
+
+
+</select>
+
+
+
+
+
+<select id="categoryFilter">
+
+<option value="all">
+📁 All Categories
+</option>
+
+
+</select>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<!-- PRODUCTS -->
+
+<main id="grid">
+
+
+</main>
+
+
+
+
+
+
+
+
+<footer>
+
+
+<p>
+
+Gaming Gear Ger
+
+</p>
+
+
+<p>
+
+Powered by Firebase
+
+</p>
+
+
+<p>
+
+Live Database © 2026
+
+</p>
+
+
+</footer>
+
+
+
+
 
 <script type="module" src="app.js"></script>
 
+
 </body>
+
 </html>
+```

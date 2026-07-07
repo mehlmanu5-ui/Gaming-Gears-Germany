@@ -1,58 +1,237 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
+
 <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ADMIN NODE</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-<header>ADMIN CONTROL</header>
+
+<header>
+    ADMIN CONTROL
+</header>
+
+
+
 
 <!-- LOGIN -->
+
 <div id="loginBox" class="filters">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="login()">LOGIN</button>
+
+
+    <input 
+    id="email" 
+    placeholder="Email">
+
+
+    <input 
+    id="password" 
+    type="password" 
+    placeholder="Password">
+
+
+    <button onclick="login()">
+        LOGIN
+    </button>
+
+
 </div>
 
+
+
+
+
+
+
+
 <!-- ADMIN PANEL -->
+
 <div id="adminBox" style="display:none;">
 
+
+
+    <!-- PRODUCT CREATE -->
+
     <div class="filters">
 
-        <input id="name" placeholder="Name">
-        <input id="desc" placeholder="Desc">
-        <input id="image" placeholder="Image URL">
-        <input id="link" placeholder="Link">
+
+
+        <input 
+        id="name" 
+        placeholder="Name">
+
+
+
+        <input 
+        id="desc" 
+        placeholder="Desc">
+
+
+
+        <input 
+        id="image" 
+        placeholder="Image URL">
+
+
+
+        <input 
+        id="link" 
+        placeholder="Link">
+
+
+
+
+
 
         <select id="board">
-            <option>Gaming</option>
-            <option>Audio</option>
-            <option>Setup</option>
+
+
+            <option value="Gaming">
+                Gaming
+            </option>
+
+
+            <option value="Audio">
+                Audio
+            </option>
+
+
+            <option value="Setup">
+                Setup
+            </option>
+
+
         </select>
+
+
+
+
+
+
 
         <select id="category">
-            <option value="">Kategorie wählen</option>
+
+
+            <option value="">
+                Kategorie wählen
+            </option>
+
+
         </select>
 
-        <button onclick="addProduct()">ADD</button>
-        <button onclick="logout()">LOGOUT</button>
+
+
+
+
+
+
+        <!-- FEATURED CHECKBOX -->
+
+
+        <div class="featured-check">
+
+
+            <input 
+            type="checkbox" 
+            id="featured">
+
+
+            <label for="featured">
+
+                ⭐ Featured Product
+
+            </label>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <button onclick="addProduct()">
+
+            ADD
+
+        </button>
+
+
+
+        <button onclick="logout()">
+
+            LOGOUT
+
+        </button>
+
+
 
     </div>
+
+
+
+
+
+
+
 
     <!-- CATEGORY CREATE -->
+
+
     <div class="filters">
-        <input id="newCategory" placeholder="Neue Kategorie...">
-        <button onclick="addCategory()">+ Kategorie erstellen</button>
+
+
+        <input 
+        id="newCategory" 
+        placeholder="Neue Kategorie...">
+
+
+        <button onclick="addCategory()">
+
+            + Kategorie erstellen
+
+        </button>
+
+
     </div>
+
+
+
+
+
+
+
+    <!-- PRODUCT LIST -->
+
 
     <div id="grid"></div>
 
+
+
+
 </div>
+
+
+
+
+
+
 
 <script type="module" src="admin.js"></script>
 
+
 </body>
+
 </html>
