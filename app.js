@@ -1,4 +1,4 @@
-```javascript
+javascript
 import { db } from "./firebase.js";
 
 import {
@@ -505,4 +505,4 @@ function hideLoader(){
 
 
 loadCategories();
-```
+
