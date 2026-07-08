@@ -1,84 +1,134 @@
-import { db, auth } from "./firebase.js";
+import { db, auth, storage } from "./firebase.js";
+
 
 import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
 
 
 import {
+
     collection,
     addDoc,
     deleteDoc,
     doc,
     onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 
 
-/* ---------------- DOM ---------------- */
+import {
 
+    ref,
+    uploadBytes,
+    getDownloadURL
 
-const loginBox = document.getElementById("loginBox");
-
-const adminBox = document.getElementById("adminBox");
-
-const grid = document.getElementById("grid");
-
-
-const name = document.getElementById("name");
-
-const desc = document.getElementById("desc");
-
-const image = document.getElementById("image");
-
-const link = document.getElementById("link");
-
-const board = document.getElementById("board");
-
-const category = document.getElementById("category");
-
-
-const featured = document.getElementById("featured");
+}
+from
+"https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
 
 
 
 
-/* ---------------- LOGIN ---------------- */
+
+/* =====================
+DOM
+===================== */
 
 
-window.login = async () => {
+const loginBox =
+document.getElementById("loginBox");
 
 
-    const email =
-    document.getElementById("email").value;
+const adminBox =
+document.getElementById("adminBox");
 
 
-    const password =
-    document.getElementById("password").value;
+const grid =
+document.getElementById("grid");
 
 
 
-    try{
+const nameInput =
+document.getElementById("name");
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
 
-    }
+const desc =
+document.getElementById("desc");
 
-    catch(e){
 
-        alert(
-            "Login fehlgeschlagen: "
-            + e.message
-        );
+const link =
+document.getElementById("link");
 
-    }
+
+const board =
+document.getElementById("board");
+
+
+const category =
+document.getElementById("category");
+
+
+const featured =
+document.getElementById("featured");
+
+
+
+
+/* =====================
+LOGIN
+===================== */
+
+
+window.login = async()=>{
+
+
+const email =
+document.getElementById("email").value;
+
+
+const password =
+document.getElementById("password").value;
+
+
+
+try{
+
+
+await signInWithEmailAndPassword(
+
+auth,
+
+email,
+
+password
+
+);
+
+
+}
+
+catch(e){
+
+
+alert(
+"Login fehlgeschlagen: "
++ e.message
+);
+
+
+}
+
+
 
 };
 
@@ -87,12 +137,17 @@ window.login = async () => {
 
 
 
-/* ---------------- LOGOUT ---------------- */
+
+/* =====================
+LOGOUT
+===================== */
 
 
-window.logout = async () => {
+window.logout = async()=>{
 
-    await signOut(auth);
+
+await signOut(auth);
+
 
 };
 
@@ -102,36 +157,44 @@ window.logout = async () => {
 
 
 
-/* ---------------- AUTH ---------------- */
+
+/* =====================
+AUTH CHECK
+===================== */
 
 
-onAuthStateChanged(auth,(user)=>{
+onAuthStateChanged(auth,user=>{
 
 
-    if(user){
+if(user){
 
 
-        loginBox.style.display="none";
-
-        adminBox.style.display="block";
+loginBox.style.display="none";
 
 
-        loadProducts();
-
-        loadCategories();
+adminBox.style.display="block";
 
 
-    }
-
-    else{
+loadProducts();
 
 
-        loginBox.style.display="block";
-
-        adminBox.style.display="none";
+loadCategories();
 
 
-    }
+
+}
+
+else{
+
+
+loginBox.style.display="block";
+
+
+adminBox.style.display="none";
+
+
+}
+
 
 
 });
@@ -142,53 +205,146 @@ onAuthStateChanged(auth,(user)=>{
 
 
 
-/* ---------------- PRODUCTS ---------------- */
+
+/* =====================
+ADD PRODUCT
+===================== */
 
 
-window.addProduct = async () => {
-
-
-    await addDoc(
-        collection(db,"products"),
-        {
-
-
-            name:name.value,
-
-
-            desc:desc.value,
-
-
-            image:image.value,
-
-
-            link:link.value,
-
-
-            board:board.value,
-
-
-            category:category.value,
-
-
-            // NEU
-            featured:featured.checked
-
-
-        }
-    );
+window.addProduct = async()=>{
 
 
 
-    name.value="";
+let imageURL = "";
 
-    desc.value="";
 
-    image.value="";
 
-    link.value="";
+const file =
 
-    featured.checked=false;
+document.getElementById("imageFile")
+.files[0];
+
+
+
+
+
+/* IMAGE UPLOAD */
+
+
+if(file){
+
+
+
+const storageRef =
+
+
+ref(
+
+storage,
+
+"products/"
++
+Date.now()
++
+"_"
++
+file.name
+
+);
+
+
+
+
+await uploadBytes(
+
+storageRef,
+
+file
+
+);
+
+
+
+
+imageURL =
+
+await getDownloadURL(
+
+storageRef
+
+);
+
+
+
+}
+
+
+
+
+
+/* FIRESTORE SAVE */
+
+
+await addDoc(
+
+collection(db,"products"),
+
+{
+
+
+name:
+nameInput.value,
+
+
+desc:
+desc.value,
+
+
+image:
+imageURL,
+
+
+link:
+link.value,
+
+
+board:
+board.value,
+
+
+category:
+category.value,
+
+
+featured:
+featured.checked
+
+
+}
+
+
+);
+
+
+
+
+
+
+nameInput.value="";
+
+
+desc.value="";
+
+
+link.value="";
+
+
+featured.checked=false;
+
+
+
+document.getElementById("imageFile").value="";
+
 
 
 };
@@ -200,81 +356,103 @@ window.addProduct = async () => {
 
 
 
+
+/* =====================
+LOAD PRODUCTS
+===================== */
+
+
 function loadProducts(){
 
 
-    onSnapshot(
-        collection(db,"products"),
-        snap=>{
 
+onSnapshot(
 
-            grid.innerHTML="";
+collection(db,"products"),
 
-
-
-            snap.forEach(d=>{
-
-
-                const p=d.data();
+snap=>{
 
 
 
-                grid.innerHTML += `
-
-
-                <div class="card">
-
-
-                    <h3>
-
-                    ${p.name}
-
-                    ${p.featured ? "⭐" : ""}
-
-                    </h3>
+grid.innerHTML="";
 
 
 
-                    <p>
 
-                    ${p.desc}
-
-                    </p>
+snap.forEach(d=>{
 
 
 
-                    <small>
-
-                    ${p.board}
-
-                    /
-
-                    ${p.category}
-
-                    </small>
+const p=d.data();
 
 
 
-                    <button onclick="del('${d.id}')">
 
-                    DELETE
-
-                    </button>
+grid.innerHTML += `
 
 
-
-                </div>
-
-
-                `;
+<div class="card">
 
 
-            });
+<img 
+src="${p.image || ''}"
+width="200"
+>
+
+
+<h3>
+
+${p.name}
+
+${p.featured ? "⭐":""}
+
+</h3>
 
 
 
-        }
-    );
+<p>
+
+${p.desc || ""}
+
+</p>
+
+
+
+<small>
+
+${p.board}
+/
+${p.category}
+
+</small>
+
+
+
+
+<button onclick="del('${d.id}')">
+
+DELETE
+
+</button>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+);
+
 
 
 }
@@ -285,14 +463,20 @@ function loadProducts(){
 
 
 
+
+/* =====================
+DELETE
+===================== */
+
+
 window.del = async(id)=>{
 
 
-    await deleteDoc(
+await deleteDoc(
 
-        doc(db,"products",id)
+doc(db,"products",id)
 
-    );
+);
 
 
 };
@@ -304,37 +488,50 @@ window.del = async(id)=>{
 
 
 
-/* ---------------- CATEGORIES ---------------- */
+/* =====================
+CATEGORIES
+===================== */
 
 
 window.addCategory = async()=>{
 
 
-    const input =
-    document.getElementById("newCategory");
+const input =
+
+document.getElementById("newCategory");
 
 
 
-    if(!input.value)
-    return;
+if(!input.value)
+
+return;
 
 
 
-    await addDoc(
-        collection(db,"categories"),
-        {
 
-            name:input.value
+await addDoc(
 
-        }
-    );
+collection(db,"categories"),
+
+{
 
 
+name:
+input.value
 
-    input.value="";
+
+}
+
+
+);
+
+
+
+input.value="";
 
 
 };
+
 
 
 
@@ -344,48 +541,58 @@ window.addCategory = async()=>{
 function loadCategories(){
 
 
-    onSnapshot(
-        collection(db,"categories"),
-        snap=>{
 
+onSnapshot(
 
-            category.innerHTML=
-            `
+collection(db,"categories"),
 
-            <option value="">
-
-            Kategorie wählen
-
-            </option>
-
-            `;
+snap=>{
 
 
 
-            snap.forEach(d=>{
+category.innerHTML=
+
+`
+
+<option>
+
+Kategorie wählen
+
+</option>
+
+`;
 
 
-                const c=d.data();
 
 
 
-                category.innerHTML +=
-                `
-
-                <option value="${c.name}">
-
-                ${c.name}
-
-                </option>
-
-                `;
+snap.forEach(d=>{
 
 
-            });
+const c=d.data();
 
 
-        }
-    );
+
+category.innerHTML +=
+
+`
+
+<option value="${c.name}">
+
+${c.name}
+
+</option>
+
+`;
+
+
+});
+
+
+
+}
+
+);
 
 
 }
