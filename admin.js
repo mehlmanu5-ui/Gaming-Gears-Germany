@@ -209,152 +209,114 @@ adminBox.style.display="none";
 /* =====================
 ADD PRODUCT
 ===================== */
-
-
 window.addProduct = async()=>{
 
+    console.log("ADD wurde geklickt");
 
 
-let imageURL = "";
+    try {
 
 
+        const file =
+        document.getElementById("imageFile").files[0];
 
-const file =
 
-document.getElementById("imageFile")
-.files[0];
+        console.log("Ausgewählte Datei:", file);
 
 
 
+        let imageURL = "";
 
 
-/* IMAGE UPLOAD */
 
+        if(file){
 
-if(file){
 
+            console.log("Starte Upload");
 
 
-const storageRef =
+            const storageRef = ref(
+                storage,
+                "products/" + Date.now() + "_" + file.name
+            );
 
 
-ref(
 
-storage,
+            await uploadBytes(
+                storageRef,
+                file
+            );
 
-"products/"
-+
-Date.now()
-+
-"_"
-+
-file.name
 
-);
 
+            console.log("Upload fertig");
 
 
 
-await uploadBytes(
+            imageURL =
+            await getDownloadURL(storageRef);
 
-storageRef,
 
-file
 
-);
+            console.log(
+                "Bild URL:",
+                imageURL
+            );
 
 
+        }
 
 
-imageURL =
 
-await getDownloadURL(
+        console.log("Speichere Firestore");
 
-storageRef
 
-);
 
+        await addDoc(
+            collection(db,"products"),
+            {
 
+                name:nameInput.value,
 
-}
+                desc:desc.value,
 
+                image:imageURL,
 
+                link:link.value,
 
+                board:board.value,
 
+                category:category.value,
 
-/* FIRESTORE SAVE */
+                featured:featured.checked
 
+            }
+        );
 
-await addDoc(
 
-collection(db,"products"),
 
-{
+        console.log("FERTIG");
 
 
-name:
-nameInput.value,
+    }
 
 
-desc:
-desc.value,
+    catch(error){
 
 
-image:
-imageURL,
+        console.error(
+            "FEHLER:",
+            error
+        );
 
 
-link:
-link.value,
+        alert(error.message);
 
 
-board:
-board.value,
-
-
-category:
-category.value,
-
-
-featured:
-featured.checked
-
-
-}
-
-
-);
-
-
-
-
-
-
-nameInput.value="";
-
-
-desc.value="";
-
-
-link.value="";
-
-
-featured.checked=false;
-
-
-
-document.getElementById("imageFile").value="";
-
+    }
 
 
 };
-
-
-
-
-
-
-
 
 
 /* =====================
