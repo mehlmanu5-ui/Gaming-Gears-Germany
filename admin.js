@@ -1,4 +1,4 @@
-import { db, auth, storage } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 
 import {
@@ -10,32 +10,15 @@ from
 "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 
 
-
 import {
-
     collection,
     addDoc,
     deleteDoc,
     doc,
     onSnapshot
-
 }
 from
 "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
-
-
-import {
-
-    ref,
-    uploadBytes,
-    getDownloadURL
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
-
-
 
 
 
@@ -66,6 +49,10 @@ const desc =
 document.getElementById("desc");
 
 
+const image =
+document.getElementById("image");
+
+
 const link =
 document.getElementById("link");
 
@@ -80,6 +67,7 @@ document.getElementById("category");
 
 const featured =
 document.getElementById("featured");
+
 
 
 
@@ -105,13 +93,9 @@ try{
 
 
 await signInWithEmailAndPassword(
-
 auth,
-
 email,
-
 password
-
 );
 
 
@@ -119,19 +103,15 @@ password
 
 catch(e){
 
-
 alert(
 "Login fehlgeschlagen: "
 + e.message
 );
 
-
 }
 
 
-
 };
-
 
 
 
@@ -145,9 +125,7 @@ LOGOUT
 
 window.logout = async()=>{
 
-
 await signOut(auth);
-
 
 };
 
@@ -159,7 +137,7 @@ await signOut(auth);
 
 
 /* =====================
-AUTH CHECK
+AUTH
 ===================== */
 
 
@@ -171,15 +149,12 @@ if(user){
 
 loginBox.style.display="none";
 
-
 adminBox.style.display="block";
 
 
 loadProducts();
 
-
 loadCategories();
-
 
 
 }
@@ -189,12 +164,10 @@ else{
 
 loginBox.style.display="block";
 
-
 adminBox.style.display="none";
 
 
 }
-
 
 
 });
@@ -206,117 +179,103 @@ adminBox.style.display="none";
 
 
 
+
 /* =====================
 ADD PRODUCT
 ===================== */
+
+
 window.addProduct = async()=>{
 
-    console.log("ADD wurde geklickt");
+
+try{
 
 
-    try {
-
-
-        const file =
-        document.getElementById("imageFile").files[0];
-
-
-        console.log("Ausgewählte Datei:", file);
+console.log("Produkt wird gespeichert");
 
 
 
-        let imageURL = "";
+await addDoc(
+
+collection(db,"products"),
+
+{
+
+
+name:
+nameInput.value,
+
+
+desc:
+desc.value,
+
+
+image:
+image.value,
+
+
+link:
+link.value,
+
+
+board:
+board.value,
+
+
+category:
+category.value,
+
+
+featured:
+featured.checked
+
+
+}
+
+
+);
 
 
 
-        if(file){
 
-
-            console.log("Starte Upload");
-
-
-            const storageRef = ref(
-                storage,
-                "products/" + Date.now() + "_" + file.name
-            );
+alert("Produkt gespeichert!");
 
 
 
-            await uploadBytes(
-                storageRef,
-                file
-            );
+nameInput.value="";
+
+desc.value="";
+
+image.value="";
+
+link.value="";
+
+featured.checked=false;
 
 
 
-            console.log("Upload fertig");
+}
 
 
-
-            imageURL =
-            await getDownloadURL(storageRef);
+catch(error){
 
 
+console.error(error);
 
-            console.log(
-                "Bild URL:",
-                imageURL
-            );
+alert(error.message);
 
 
-        }
-
-
-
-        console.log("Speichere Firestore");
-
-
-
-        await addDoc(
-            collection(db,"products"),
-            {
-
-                name:nameInput.value,
-
-                desc:desc.value,
-
-                image:imageURL,
-
-                link:link.value,
-
-                board:board.value,
-
-                category:category.value,
-
-                featured:featured.checked
-
-            }
-        );
-
-
-
-        console.log("FERTIG");
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(
-            "FEHLER:",
-            error
-        );
-
-
-        alert(error.message);
-
-
-    }
+}
 
 
 };
+
+
+
+
+
+
+
 
 
 /* =====================
@@ -327,7 +286,6 @@ LOAD PRODUCTS
 function loadProducts(){
 
 
-
 onSnapshot(
 
 collection(db,"products"),
@@ -335,18 +293,14 @@ collection(db,"products"),
 snap=>{
 
 
-
 grid.innerHTML="";
-
 
 
 
 snap.forEach(d=>{
 
 
-
 const p=d.data();
-
 
 
 
@@ -357,7 +311,7 @@ grid.innerHTML += `
 
 
 <img 
-src="${p.image || ''}"
+src="${p.image || 'https://via.placeholder.com/300'}"
 width="200"
 >
 
@@ -382,12 +336,13 @@ ${p.desc || ""}
 
 <small>
 
-${p.board}
+${p.board || ""}
+
 /
-${p.category}
+
+${p.category || ""}
 
 </small>
-
 
 
 
@@ -398,9 +353,7 @@ DELETE
 </button>
 
 
-
 </div>
-
 
 
 `;
@@ -410,14 +363,14 @@ DELETE
 });
 
 
-
 }
+
 
 );
 
 
-
 }
+
 
 
 
@@ -450,6 +403,7 @@ doc(db,"products",id)
 
 
 
+
 /* =====================
 CATEGORIES
 ===================== */
@@ -459,13 +413,11 @@ window.addCategory = async()=>{
 
 
 const input =
-
 document.getElementById("newCategory");
 
 
 
 if(!input.value)
-
 return;
 
 
@@ -477,13 +429,10 @@ collection(db,"categories"),
 
 {
 
-
 name:
 input.value
 
-
 }
-
 
 );
 
@@ -500,8 +449,8 @@ input.value="";
 
 
 
-function loadCategories(){
 
+function loadCategories(){
 
 
 onSnapshot(
@@ -511,20 +460,13 @@ collection(db,"categories"),
 snap=>{
 
 
+category.innerHTML=`
 
-category.innerHTML=
-
-`
-
-<option>
-
+<option value="">
 Kategorie wählen
-
 </option>
 
 `;
-
-
 
 
 
@@ -535,9 +477,7 @@ const c=d.data();
 
 
 
-category.innerHTML +=
-
-`
+category.innerHTML += `
 
 <option value="${c.name}">
 
@@ -548,11 +488,12 @@ ${c.name}
 `;
 
 
+
 });
 
 
-
 }
+
 
 );
 
