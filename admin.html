@@ -53,184 +53,193 @@
 
 
 
-
-
 <!-- ADMIN PANEL -->
 
 <div id="adminBox" style="display:none;">
 
 
 
-    <!-- PRODUCT CREATE -->
+<!-- PRODUCT CREATE / EDIT -->
 
+<div class="filters">
 
-    <div class="filters">
 
+<input 
+id="name"
+placeholder="Produkt Name">
 
 
-        <input 
-        id="name" 
-        placeholder="Produkt Name">
 
+<input 
+id="desc"
+placeholder="Beschreibung">
 
 
-        <input 
-        id="desc" 
-        placeholder="Beschreibung">
 
+<input 
+id="image"
+placeholder="Bild URL">
 
 
-        <input 
-        id="image"
-        placeholder="Bild URL (Pinterest/GitHub)">
 
+<input 
+id="link"
+placeholder="Affiliate Link">
 
 
-        <input 
-        id="link" 
-        placeholder="Affiliate Link">
 
 
 
+<select id="board">
 
+<option value="">
+Board wählen
+</option>
 
 
-        <select id="board">
+</select>
 
 
-            <option value="Gaming">
-                Gaming
-            </option>
 
 
-            <option value="Audio">
-                Audio
-            </option>
 
 
-            <option value="Setup">
-                Setup
-            </option>
+<select id="category">
 
+<option value="">
+Kategorie wählen
+</option>
 
-        </select>
 
+</select>
 
 
 
 
 
 
+<div class="featured-check">
 
-        <select id="category">
 
+<input 
+type="checkbox"
+id="featured">
 
-            <option value="">
-                Kategorie wählen
-            </option>
 
+<label for="featured">
 
-        </select>
+⭐ Featured Product
 
+</label>
 
 
+</div>
 
 
 
 
 
 
-        <div class="featured-check">
+<button onclick="addProduct()">
 
+ADD PRODUCT
 
-            <input 
-            type="checkbox" 
-            id="featured">
+</button>
 
 
-            <label for="featured">
 
-                ⭐ Featured Product
+<button onclick="updateProduct()">
 
-            </label>
+UPDATE PRODUCT
 
+</button>
 
-        </div>
 
 
 
+<button onclick="logout()">
 
+LOGOUT
 
-
-
-
-        <button onclick="addProduct()">
-
-            ADD PRODUCT
-
-        </button>
-
-
-
-
-        <button onclick="logout()">
-
-            LOGOUT
-
-        </button>
-
-
-
-
-    </div>
-
-
-
-
-
-
-
-
-
-    <!-- CATEGORY CREATE -->
-
-
-    <div class="filters">
-
-
-        <input 
-        id="newCategory" 
-        placeholder="Neue Kategorie...">
-
-
-        <button onclick="addCategory()">
-
-            + Kategorie erstellen
-
-        </button>
-
-
-    </div>
-
-
-
-
-
-
-
-
-
-    <!-- PRODUCT LIST -->
-
-
-    <div id="grid"></div>
-
+</button>
 
 
 
 </div>
 
 
+
+
+
+
+
+
+<!-- BOARD CREATE -->
+
+
+<div class="filters">
+
+
+<input 
+id="newBoard"
+placeholder="Neues Board">
+
+
+<button onclick="addBoard()">
+
++ Board erstellen
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CATEGORY CREATE -->
+
+
+<div class="filters">
+
+
+<input 
+id="newCategory"
+placeholder="Neue Kategorie">
+
+
+<button onclick="addCategory()">
+
++ Kategorie erstellen
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PRODUCTS -->
+
+<div id="grid"></div>
+
+
+
+
+
+
+</div>
 
 
 

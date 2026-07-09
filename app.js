@@ -3,238 +3,281 @@ import { db } from "./firebase.js";
 import {
     collection,
     onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+}
+from
+"https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 
 
 /* =========================
-   DOM
+DOM
 ========================= */
 
-const grid = document.getElementById("grid");
 
-const search = document.getElementById("search");
-
-const boardFilter = document.getElementById("boardFilter");
-
-const categoryFilter = document.getElementById("categoryFilter");
+const grid =
+document.getElementById("grid");
 
 
-const productCount = document.getElementById("productCount");
-
-const categoryCount = document.getElementById("categoryCount");
-
-const boardCount = document.getElementById("boardCount");
+const search =
+document.getElementById("search");
 
 
-const featuredName = document.getElementById("featuredName");
-
-const featuredButton = document.getElementById("featuredButton");
-
+const boardFilter =
+document.getElementById("boardFilter");
 
 
-let allProducts = [];
+const categoryFilter =
+document.getElementById("categoryFilter");
 
-let allCategories = [];
+
+const productCount =
+document.getElementById("productCount");
+
+
+const categoryCount =
+document.getElementById("categoryCount");
+
+
+const boardCount =
+document.getElementById("boardCount");
+
+
+const featuredName =
+document.getElementById("featuredName");
+
+
+const featuredButton =
+document.getElementById("featuredButton");
+
+
+
+
+let allProducts=[];
+
+let allCategories=[];
+
+let allBoards=[];
+
 
 
 
 
 
 /* =========================
-   PRODUCTS LIVE
+PRODUCTS
 ========================= */
 
 
-onSnapshot(collection(db, "products"), snap => {
+onSnapshot(
+
+collection(db,"products"),
+
+snap=>{
 
 
-    allProducts = [];
+allProducts=[];
 
 
-    snap.forEach(doc => {
+
+snap.forEach(doc=>{
 
 
-        allProducts.push({
+allProducts.push({
 
-            id: doc.id,
+id:doc.id,
 
-            ...doc.data()
+...doc.data()
 
-        });
-
-
-    });
-
-
-    console.log(
-        "Produkte geladen:",
-        allProducts
-    );
-
-
-    updateStats();
-
-    setFeatured();
-
-    render(allProducts);
+});
 
 
 });
 
 
 
+updateStats();
+
+setFeatured();
+
+render(allProducts);
+
+
+
+}
+
+
+);
+
+
+
+
+
 
 
 
 
 /* =========================
-   RENDER PRODUCTS
+RENDER
 ========================= */
 
 
 function render(list){
 
 
-    if(!grid)
-        return;
 
+if(!grid)
+return;
 
 
-    grid.innerHTML = "";
 
+grid.innerHTML="";
 
 
-    const text =
-    (search?.value || "")
-    .toLowerCase();
 
+const text =
+(search?.value || "")
+.toLowerCase();
 
 
-    const board =
-    boardFilter?.value || "all";
 
+const board =
+boardFilter?.value || "all";
 
 
-    const category =
-    categoryFilter?.value || "all";
+const category =
+categoryFilter?.value || "all";
 
 
 
 
-    list
 
-    .filter(p =>
+list
 
-        (p.name || "")
-        .toLowerCase()
-        .includes(text)
+.filter(p=>
 
-    )
+(p.name || "")
+.toLowerCase()
+.includes(text)
 
+)
 
-    .filter(p =>
 
-        board === "all"
 
-        ?
+.filter(p=>
 
-        true
+board==="all"
 
-        :
+?
 
-        (p.board || "")
-        .toLowerCase()
+true
 
-        ===
+:
 
-        board.toLowerCase()
+(p.board || "")
+.toLowerCase()
 
-    )
+===
 
+board.toLowerCase()
 
-    .filter(p =>
+)
 
-        category === "all"
 
-        ?
 
-        true
+.filter(p=>
 
-        :
+category==="all"
 
-        (p.category || "")
-        .toLowerCase()
+?
 
-        ===
+true
 
-        category.toLowerCase()
+:
 
-    )
+(p.category || "")
+.toLowerCase()
 
+===
 
+category.toLowerCase()
 
-    .forEach(p => {
+)
 
 
 
-        grid.innerHTML += `
+.forEach(p=>{
 
 
-        <div class="card">
 
+grid.innerHTML += `
 
-            <img src="${p.image || 
-            'https://via.placeholder.com/300'}">
 
 
+<div class="card">
 
-            <h3>
-                ${p.name || "Unknown Product"}
-            </h3>
 
 
+<img src="${p.image || 
+'https://via.placeholder.com/300'}">
 
-            <p>
-                ${p.desc || ""}
-            </p>
 
 
+<h3>
 
-            <small>
+${p.name || "Unknown"}
 
-                ${p.board || "Unknown"}
+${p.featured ? " ⭐":""}
 
-                /
+</h3>
 
-                ${p.category || "Unknown"}
 
-            </small>
 
+<p>
 
+${p.desc || ""}
 
+</p>
 
-            <a
 
-            class="btn"
 
-            href="${p.link || '#'}"
 
-            target="_blank">
+<small>
 
-                OPEN
+${p.board || "Unknown"}
 
-            </a>
+/
 
+${p.category || "Unknown"}
 
+</small>
 
-        </div>
 
 
-        `;
 
+<a
 
-    });
+class="btn"
+
+href="${p.link || '#'}"
+
+target="_blank">
+
+OPEN
+
+</a>
+
+
+
+</div>
+
+
+
+`;
+
+
+
+});
+
 
 
 }
@@ -248,40 +291,28 @@ function render(list){
 
 
 /* =========================
-   FILTER EVENTS
+FILTER EVENTS
 ========================= */
 
 
-if(search){
-
-search.addEventListener(
+search?.addEventListener(
 "input",
 ()=>render(allProducts)
 );
 
-}
 
 
-
-if(boardFilter){
-
-boardFilter.addEventListener(
+boardFilter?.addEventListener(
 "change",
 ()=>render(allProducts)
 );
 
-}
 
 
-
-if(categoryFilter){
-
-categoryFilter.addEventListener(
+categoryFilter?.addEventListener(
 "change",
 ()=>render(allProducts)
 );
-
-}
 
 
 
@@ -292,81 +323,71 @@ categoryFilter.addEventListener(
 
 
 /* =========================
-   CATEGORIES
+CATEGORIES
 ========================= */
 
 
 function loadCategories(){
 
 
+onSnapshot(
 
-    onSnapshot(
-    collection(db,"categories"),
-    snap => {
+collection(db,"categories"),
 
-
-
-        allCategories = [];
+snap=>{
 
 
-
-        if(categoryFilter){
-
-
-        categoryFilter.innerHTML = `
-
-        <option value="all">
-        📁 All Categories
-        </option>
-
-        `;
-
-
-        }
+allCategories=[];
 
 
 
-        snap.forEach(doc => {
+categoryFilter.innerHTML=`
+
+<option value="all">
+
+📁 All Categories
+
+</option>
+
+`;
 
 
 
-            const data = doc.data();
+
+snap.forEach(doc=>{
+
+
+const data=doc.data();
+
+
+allCategories.push(data);
 
 
 
-            allCategories.push(data);
+categoryFilter.innerHTML +=`
+
+<option value="${data.name}">
+
+${data.name}
+
+</option>
+
+`;
 
 
 
-            if(categoryFilter){
-
-
-            categoryFilter.innerHTML += `
-
-
-            <option value="${data.name}">
-
-            ${data.name}
-
-            </option>
-
-
-            `;
-
-
-            }
+});
 
 
 
-        });
+updateStats();
 
 
-
-        updateStats();
-
+}
 
 
-    });
+);
+
 
 
 }
@@ -380,7 +401,102 @@ function loadCategories(){
 
 
 /* =========================
-   STATS
+BOARDS
+========================= */
+
+
+function loadBoards(){
+
+
+onSnapshot(
+
+collection(db,"boards"),
+
+snap=>{
+
+
+allBoards=[];
+
+
+
+if(boardFilter){
+
+
+
+boardFilter.innerHTML=`
+
+<option value="all">
+
+🎮 All Boards
+
+</option>
+
+`;
+
+
+
+}
+
+
+
+
+snap.forEach(doc=>{
+
+
+const data=doc.data();
+
+
+allBoards.push(data);
+
+
+
+if(boardFilter){
+
+
+
+boardFilter.innerHTML +=`
+
+<option value="${data.name}">
+
+${data.name}
+
+</option>
+
+`;
+
+
+
+}
+
+
+
+});
+
+
+
+updateStats();
+
+
+
+}
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================
+STATS
 ========================= */
 
 
@@ -388,49 +504,25 @@ function updateStats(){
 
 
 
-    if(productCount){
+if(productCount)
 
-        productCount.textContent =
-        allProducts.length;
-
-    }
+productCount.textContent =
+allProducts.length;
 
 
 
+if(categoryCount)
 
-    if(categoryCount){
-
-        categoryCount.textContent =
-        allCategories.length;
-
-    }
+categoryCount.textContent =
+allCategories.length;
 
 
 
+if(boardCount)
 
-    if(boardCount){
+boardCount.textContent =
+allBoards.length;
 
-
-        const boards =
-        new Set(
-
-            allProducts.map(
-
-                p => p.board
-
-            )
-
-            .filter(Boolean)
-
-        );
-
-
-
-        boardCount.textContent =
-        boards.size;
-
-
-    }
 
 
 }
@@ -444,7 +536,7 @@ function updateStats(){
 
 
 /* =========================
-   FEATURED
+FEATURED
 ========================= */
 
 
@@ -452,58 +544,65 @@ function setFeatured(){
 
 
 
-    if(!featuredName)
-        return;
+if(!featuredName)
+return;
+
+
+
+const featuredProduct =
+
+allProducts.find(
+
+p=>p.featured === true
+
+);
 
 
 
 
-    const featuredProduct =
 
-    allProducts.find(
-
-        p => p.featured === true
-
-    );
+if(featuredProduct){
 
 
 
+featuredName.textContent =
 
-
-    if(featuredProduct){
-
-
-
-        featuredName.textContent =
-
-        featuredProduct.name;
-
-
-
-        if(featuredButton){
-
-
-            featuredButton.href =
-
-            featuredProduct.link || "#";
-
-
-        }
+featuredProduct.name;
 
 
 
 
-    }
-
-    else{
+if(featuredButton){
 
 
-        featuredName.textContent =
+featuredButton.href =
 
-        "No Featured Product";
+featuredProduct.link || "#";
 
 
-    }
+}
+
+
+
+}
+
+
+
+else{
+
+
+featuredName.textContent =
+
+"No Featured Product";
+
+
+if(featuredButton)
+
+featuredButton.href="#";
+
+
+}
+
 
 
 }
@@ -517,8 +616,10 @@ function setFeatured(){
 
 
 /* =========================
-   START
+START
 ========================= */
 
 
 loadCategories();
+
+loadBoards();
